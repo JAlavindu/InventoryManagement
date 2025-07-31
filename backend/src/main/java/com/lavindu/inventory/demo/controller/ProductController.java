@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/search/{keyword}")
-    public ResponseEntity<List<Product>> searchProduct(@RequestParam String keyword){
+    public ResponseEntity<List<Product>> searchProduct(@PathVariable String keyword){
         List<Product> products = productService.searchProduct(keyword);
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if no products found
@@ -70,5 +70,11 @@ public class ProductController {
             System.out.println("search with: " + keyword);
             return new ResponseEntity<>(products, HttpStatus.OK); // Return the list of products with 200 OK status
         }
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<Product>> getProductsByCategory(@RequestParam String category){
+        List<Product> products = productService.getProductsByCategory(category);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

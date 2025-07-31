@@ -51,4 +51,8 @@ public class ProductService {
     public List<Product> searchProduct(String keyword) {
         return productRepo.searchProducts(keyword);
     }
+
+    public List<Product> getProductsByCategory(String category) {
+        return productRepo.getProductsByCategory(category);
+    }
 }
