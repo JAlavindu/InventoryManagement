@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
+import infographic from "../assets/infographic.jpg";
 
 const ABOUT_US = [
   {
@@ -35,11 +36,21 @@ function LandingPage() {
       </div>
 
       <div className="flex flex-col items-center justify-center h-screen mx-auto w-4/5 ">
-        <div className="text-center my-8 h-64 w-full items-center justify-center">
-          <h2 className="text-2xl font-bold mb-4 ">
-            Your Seamless Inventory Management System
-          </h2>
-          <p className="text-lg mb-8">Manage your inventory with ease.</p>
+        <div className="flex flex-row justify-center my-8 h-64 w-full">
+          <div>
+            <img
+              src={infographic}
+              alt="image for hero"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div>
+            <h2 className="text-3xl font-bold mb-4 ">
+              Your Seamless Inventory Management System
+            </h2>
+            <p className="text-lg mb-8">Manage your inventory with ease.</p>
+          </div>
         </div>
 
         {/* about us */}
