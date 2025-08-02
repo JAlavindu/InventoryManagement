@@ -12,7 +12,12 @@ function Products() {
     axios
       .get("http://localhost:8080/api/products")
       .then((response) => {
-        setProducts(response.data);
+        // Enhance each product with its image URL
+        const updatedProducts = response.data.map((product) => ({
+          ...product,
+          imageUrl: `http://localhost:8080/api/products/${product.id}/image`,
+        }));
+        setProducts(updatedProducts);
         setLoading(false);
       })
       .catch((err) => {
@@ -27,19 +32,20 @@ function Products() {
       <div>
         <NavBar />
       </div>
-      <div className="p-6">
+      <div className="p-6 w-4/5 mx-auto">
         <h1 className="text-2xl font-bold mb-4">Products</h1>
         {loading ? (
           <p>Loading products...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {products.map((product) => (
               <Card
                 key={product.id}
                 title={product.name}
                 description={product.description}
+                image={product.imageUrl}
               />
             ))}
           </ul>

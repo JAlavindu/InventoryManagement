@@ -1,12 +1,15 @@
 package com.lavindu.inventory.demo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lavindu.inventory.demo.model.Product;
 import com.lavindu.inventory.demo.service.ProductService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,10 +28,23 @@ public class ProductController {
        return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product){
-        return new ResponseEntity<>(productService.addProducts(product), HttpStatus.OK);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Product> addProduct(
+            @RequestPart("product") String productJson,
+            @RequestPart("imageFile") MultipartFile imageFile) {
+        try {
+            // Convert JSON string to Product manually
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product product = objectMapper.readValue(productJson, Product.class);
+
+            Product savedProduct = productService.addProducts(product, imageFile);
+            return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
 
     @GetMapping("product/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id){
@@ -39,6 +55,27 @@ public class ProductController {
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id) {
+        System.out.println("Fetching image for product ID: " + id);
+        Product product = productService.getProductById(id);
+
+        if (product == null) {
+            System.out.println("Product not found.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (product.getImageData() == null) {
+            System.out.println("Product has no image data.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(product.getImageType()))
+                .body(product.getImageData());
     }
 
     @PutMapping("product/{id}")

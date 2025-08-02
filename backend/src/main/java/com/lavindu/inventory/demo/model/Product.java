@@ -1,9 +1,6 @@
 package com.lavindu.inventory.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +19,8 @@ public class Product {
     private String description;
     private String category;
     private Integer quantity;
+    private String imageName;
+    private String imageType;
+    @Lob
+    private byte[] imageData;
 }
