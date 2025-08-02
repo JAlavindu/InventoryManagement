@@ -1,45 +1,53 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useCallback } from "react";
 import NavBar from "../components/NavBar";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
+import useAxios from "../hooks/useAxios";
 
 function Products() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // ✅ Memoize the transform function to prevent infinite loop
+  const transformProducts = useCallback(
+    (products) =>
+      products.map((product) => ({
+        ...product,
+        imageUrl: `http://localhost:8080/api/products/${product.id}/image`,
+      })),
+    []
+  );
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/products")
-      .then((response) => {
-        // Enhance each product with its image URL
-        const updatedProducts = response.data.map((product) => ({
-          ...product,
-          imageUrl: `http://localhost:8080/api/products/${product.id}/image`,
-        }));
-        setProducts(updatedProducts);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Failed to fetch products");
-        setLoading(false);
-      });
-  }, []);
+  const {
+    data: products = [],
+    loading,
+    error,
+  } = useAxios({
+    url: "http://localhost:8080/api/products",
+    transform: transformProducts,
+  });
 
   return (
     <>
-      <div>
-        <NavBar />
-      </div>
-      <div className="p-6 w-4/5 mx-auto h-screen">
-        <h1 className="text-2xl font-bold mb-4">Products</h1>
-        {loading ? (
-          <p>Loading products...</p>
-        ) : error ? (
-          <p className="text-red-500">{error}</p>
-        ) : (
+      <NavBar />
+
+      <div className="p-6 w-4/5 mx-auto min-h-screen">
+        <h1 className="text-2xl font-bold mb-4 text-center">Products</h1>
+
+        {loading && (
+          <p className="text-gray-500 text-center animate-pulse">
+            Loading products...
+          </p>
+        )}
+
+        {!loading && error && (
+          <p className="text-red-500 text-center">
+            {error.message || "Failed to load products."}
+          </p>
+        )}
+
+        {!loading && !error && products.length === 0 && (
+          <p className="text-center text-gray-500">No products available.</p>
+        )}
+
+        {!loading && !error && products.length > 0 && (
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {products.map((product) => (
               <Card
@@ -53,9 +61,7 @@ function Products() {
         )}
       </div>
 
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </>
   );
 }
