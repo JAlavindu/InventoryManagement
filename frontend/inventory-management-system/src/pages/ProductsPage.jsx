@@ -3,8 +3,10 @@ import NavBar from "../components/NavBar";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import useAxios from "../hooks/useAxios";
+import Button from "../components/Button";
+import { Link } from "react-router-dom";
 
-function Products() {
+function ProductsPage() {
   // ✅ Memoize the transform function to prevent infinite loop
   const transformProducts = useCallback(
     (products) =>
@@ -29,7 +31,15 @@ function Products() {
       <NavBar />
 
       <div className="p-6 w-4/5 mx-auto min-h-screen">
-        <h1 className="text-2xl font-bold mb-4 text-center">Products</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold mb-4 ">Products</h1>
+          <Link
+            to="/add-product"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold mb-4 px-4 py-2 rounded"
+          >
+            Add Product
+          </Link>
+        </div>
 
         {loading && (
           <p className="text-gray-500 text-center animate-pulse">
@@ -55,6 +65,8 @@ function Products() {
                 title={product.name}
                 description={product.description}
                 image={product.imageUrl}
+                editButton={true}
+                deleteButton={true}
               />
             ))}
           </ul>
@@ -66,4 +78,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default ProductsPage;

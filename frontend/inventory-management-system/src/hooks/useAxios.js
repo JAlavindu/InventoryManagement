@@ -33,7 +33,7 @@ function useAxios({
     } finally {
       setLoading(false);
     }
-  }, [url, method, body, headers]); // ⛔️ remove transform from dependencies
+  }, [url, method, body, headers, transform]);
 
   useEffect(() => {
     if (triggerOnMount) {
