@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "../components/NavBar";
 import Card from "../components/Card";
+import Footer from "../components/Footer";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -32,7 +33,7 @@ function Products() {
       <div>
         <NavBar />
       </div>
-      <div className="p-6 w-4/5 mx-auto">
+      <div className="p-6 w-4/5 mx-auto h-screen">
         <h1 className="text-2xl font-bold mb-4">Products</h1>
         {loading ? (
           <p>Loading products...</p>
@@ -50,6 +51,10 @@ function Products() {
             ))}
           </ul>
         )}
+      </div>
+
+      <div>
+        <Footer />
       </div>
     </>
   );
