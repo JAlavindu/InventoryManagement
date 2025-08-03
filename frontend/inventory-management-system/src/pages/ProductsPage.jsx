@@ -1,9 +1,6 @@
 import { useCallback } from "react";
-import NavBar from "../components/NavBar";
 import Card from "../components/Card";
-import Footer from "../components/Footer";
 import useAxios from "../hooks/useAxios";
-import Button from "../components/Button";
 import { Link } from "react-router-dom";
 
 function ProductsPage() {
@@ -28,11 +25,9 @@ function ProductsPage() {
 
   return (
     <>
-      <NavBar />
-
       <div className="p-6 w-4/5 mx-auto min-h-screen">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold mb-4 ">Products</h1>
+          <h1 className="text-4xl font-bold mb-4 ">Products</h1>
           <Link
             to="/add-product"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold mb-4 px-4 py-2 rounded"
@@ -72,8 +67,6 @@ function ProductsPage() {
           </ul>
         )}
       </div>
-
-      <Footer />
     </>
   );
 }

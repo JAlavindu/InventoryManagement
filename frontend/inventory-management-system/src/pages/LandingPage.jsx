@@ -30,11 +30,6 @@ const ABOUT_US = [
 function LandingPage() {
   return (
     <>
-      <div>
-        {" "}
-        <NavBar />
-      </div>
-
       <div className="flex flex-col items-center justify-center h-screen mx-auto w-4/5 ">
         <div className="flex flex-row justify-center my-8 h-64 w-full">
           <div>
@@ -65,9 +60,9 @@ function LandingPage() {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <Footer />
-      </div>
+      </div> */}
     </>
   );
 }
