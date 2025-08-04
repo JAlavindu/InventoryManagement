@@ -62,6 +62,7 @@ function ProductsPage() {
                 image={product.imageUrl}
                 editButton={true}
                 deleteButton={true}
+                id={product.id}
               />
             ))}
           </ul>

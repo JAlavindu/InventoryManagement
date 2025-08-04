@@ -10,7 +10,7 @@ function Card({ title, description, image, ...props }) {
   return (
     <>
       <Modal open={modalState} onClose={closeModal}>
-        <DeleteProduct />
+        <DeleteProduct id={props.id} />
       </Modal>
       <div className="border rounded-lg border-hidden shadow-lg p-4 bg-white">
         {image && (
