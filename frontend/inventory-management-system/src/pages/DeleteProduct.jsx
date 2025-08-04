@@ -1,15 +1,21 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Button from "../components/Button";
+import ProductContext from "../store/product-context";
 
 function DeleteProduct() {
+  const { modalState, openModal, closeModal } = useContext(ProductContext);
   function cancelProductDeletion() {
     // Logic to cancel product deletion
+    closeModal();
+    console.log(modalState);
     console.log("Product deletion cancelled");
   }
 
   function confirmProductDeletion() {
     // Logic to confirm product deletion
+    closeModal();
+    console.log(modalState);
     console.log("Product deleted successfully");
   }
   return (

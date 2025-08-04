@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useContext, useState } from "react";
 import Button from "./Button";
 import DeleteProduct from "../pages/DeleteProduct";
 import Modal from "./Modal";
+import ProductContext from "../store/product-context";
 
 function Card({ title, description, image, ...props }) {
-  const [open, setOpen] = useState(false);
-  function openModel() {
-    setOpen(true);
-  }
+  const { modalState, openModal, closeModal } = useContext(ProductContext);
   return (
     <>
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal open={modalState} onClose={closeModal}>
         <DeleteProduct />
       </Modal>
       <div className="border rounded-lg border-hidden shadow-lg p-4 bg-white">
@@ -39,7 +38,7 @@ function Card({ title, description, image, ...props }) {
             {props.deleteButton && (
               <Button
                 label="Delete"
-                onClick={openModel}
+                onClick={openModal}
                 className="bg-red-500 hover:bg-red-700 text-white font-bold mt-2 ml-2"
               />
             )}
