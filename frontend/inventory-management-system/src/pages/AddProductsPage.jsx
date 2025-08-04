@@ -2,17 +2,7 @@ import { useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import useAxios from "../hooks/useAxios";
-const categories = [
-  "Electronics",
-  "Apparel",
-  "Food & Beverages",
-  "Furniture",
-  "Health & Beauty",
-  "Raw Materials",
-  "Finished Goods",
-  "Consumables",
-  "Damaged Items",
-];
+import categories from "../utils/categories";
 function AddProductsPage() {
   const [product, setProduct] = useState({
     name: "",

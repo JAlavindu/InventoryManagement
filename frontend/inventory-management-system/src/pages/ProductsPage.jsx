@@ -1,9 +1,13 @@
-import { useCallback } from "react";
+/* eslint-disable no-unused-vars */
+import { useCallback, useContext } from "react";
 import Card from "../components/Card";
 import useAxios from "../hooks/useAxios";
 import { Link } from "react-router-dom";
+import CategoryComponent from "../components/CategoryComponent";
+import ProductContext from "../store/product-context";
 
 function ProductsPage() {
+  const { category } = useContext(ProductContext);
   // ✅ Memoize the transform function to prevent infinite loop
   const transformProducts = useCallback(
     (products) =>
@@ -22,18 +26,25 @@ function ProductsPage() {
     url: "http://localhost:8080/api/products",
     transform: transformProducts,
   });
-
+  // function categoryFilter(category) {
+  //     return products.filter((product) => product.category === category);
+  //   }
   return (
     <>
       <div className="p-6 w-4/5 mx-auto min-h-screen">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-4xl font-bold mb-4 ">Products</h1>
+
           <Link
             to="/add-product"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold mb-4 px-4 py-2 rounded"
           >
             Add Product
           </Link>
+        </div>
+
+        <div className="mb-6">
+          <CategoryComponent />
         </div>
 
         {loading && (
