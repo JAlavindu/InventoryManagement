@@ -1,25 +1,24 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import category from "../utils/categories";
-import Button from "./Button";
+import ProductContext from "../store/product-context";
 
 function CategoryComponent() {
   const [activeCategory, setActiveCategory] = useState(category[0]);
+  const { setCategoryHandler } = useContext(ProductContext);
 
-  const handleCategoryChange = (cat) => {
+  function handleCategoryChange(cat) {
     setActiveCategory(cat);
-  };
+    setCategoryHandler(cat);
+    console.log(`Category changed to: ${cat}`);
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6">
-      {/* <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-        Browse by Category
-      </h2> */}
-
       <div className="flex flex-wrap justify-center border-b border-gray-300">
         {category.map((cat) => (
           <button
             key={cat}
-            onClick={() => setActiveCategory(cat)}
+            onClick={() => handleCategoryChange(cat)}
             className={`px-5 py-2 text-sm font-medium 
               ${
                 activeCategory === cat

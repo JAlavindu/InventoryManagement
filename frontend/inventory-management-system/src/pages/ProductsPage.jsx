@@ -7,25 +7,25 @@ import CategoryComponent from "../components/CategoryComponent";
 import ProductContext from "../store/product-context";
 
 function ProductsPage() {
-  const { category } = useContext(ProductContext);
+  const { category, products, loading, error } = useContext(ProductContext);
   // ✅ Memoize the transform function to prevent infinite loop
-  const transformProducts = useCallback(
-    (products) =>
-      products.map((product) => ({
-        ...product,
-        imageUrl: `http://localhost:8080/api/products/${product.id}/image`,
-      })),
-    []
-  );
+  // const transformProducts = useCallback(
+  //   (products) =>
+  //     products.map((product) => ({
+  //       ...product,
+  //       imageUrl: `http://localhost:8080/api/products/${product.id}/image`,
+  //     })),
+  //   []
+  // );
 
-  const {
-    data: products = [],
-    loading,
-    error,
-  } = useAxios({
-    url: "http://localhost:8080/api/products",
-    transform: transformProducts,
-  });
+  // const {
+  //   data: products = [],
+  //   loading,
+  //   error,
+  // } = useAxios({
+  //   url: "http://localhost:8080/api/products",
+  //   transform: transformProducts,
+  // });
   // function categoryFilter(category) {
   //     return products.filter((product) => product.category === category);
   //   }
