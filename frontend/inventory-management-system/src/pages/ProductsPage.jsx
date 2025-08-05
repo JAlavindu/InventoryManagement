@@ -6,7 +6,8 @@ import CategoryComponent from "../components/CategoryComponent";
 import ProductContext from "../store/product-context";
 
 function ProductsPage() {
-  const { category, products, loading, error } = useContext(ProductContext);
+  const { products, loading, error, refetchProducts } =
+    useContext(ProductContext);
 
   return (
     <>

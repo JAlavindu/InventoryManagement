@@ -6,7 +6,7 @@ import Button from "../components/Button";
 import useAxios from "../hooks/useAxios";
 
 function EditProductsPage() {
-  const { products } = useContext(ProductContext);
+  const { products, refetchProducts } = useContext(ProductContext);
   const { id } = useParams();
   const [updateProduct, setUpdateProduct] = useState(null);
   const [message, setMessage] = useState("");
@@ -75,6 +75,7 @@ function EditProductsPage() {
 
     setMessage("Product updated successfully!");
     updateProductRequest.refetch();
+    refetchProducts(); // Refresh the product list after update
     navigate("/products");
   }
 

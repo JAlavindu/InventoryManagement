@@ -30,6 +30,7 @@ export default function ProductsContextProvider({ children }) {
     data: products = [],
     loading,
     error,
+    refetch,
   } = useAxios({
     url: "http://localhost:8080/api/products",
     transform: transformProducts,
@@ -53,6 +54,7 @@ export default function ProductsContextProvider({ children }) {
     products: filteredProducts,
     loading,
     error,
+    refetchProducts: refetch,
   };
   return (
     <ProductContext.Provider value={ctxValue}>
