@@ -31,7 +31,7 @@ public class ProductService {
         return productRepo.findById(id).orElse(null);
     }
 
-    public Product updateProduct(Long id, Product updatedData) throws IOException {
+    public Product updateProduct(Long id, Product updatedData, MultipartFile imageFile) throws IOException {
         Product product = productRepo.findById(id)
                 .orElseThrow(() -> new IOException("Product not found"));
 
@@ -39,6 +39,13 @@ public class ProductService {
         product.setName(updatedData.getName());
         product.setPrice(updatedData.getPrice());
         product.setQuantity(updatedData.getQuantity());
+        product.setDescription(updatedData.getDescription());
+        product.setCategory(updatedData.getCategory());
+        if (imageFile != null && !imageFile.isEmpty()) {
+            product.setImageName(imageFile.getOriginalFilename());
+            product.setImageType(imageFile.getContentType());
+            product.setImageData(imageFile.getBytes());
+        }
 
         return productRepo.save(product);
     }

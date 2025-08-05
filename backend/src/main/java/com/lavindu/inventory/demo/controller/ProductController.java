@@ -78,15 +78,22 @@ public class ProductController {
                 .body(product.getImageData());
     }
 
-    @PutMapping("product/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProductData) {
+    @PutMapping(value = "product/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable Long id,
+            @RequestPart("product") String productJson,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
+
         try {
-            Product updatedProduct = productService.updateProduct(id, updatedProductData);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product product = objectMapper.readValue(productJson, Product.class);
+            Product updatedProduct = productService.updateProduct(id, product, imageFile);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @DeleteMapping("product/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {

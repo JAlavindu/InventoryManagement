@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useCallback, useContext } from "react";
 import Card from "../components/Card";
-import useAxios from "../hooks/useAxios";
 import { Link } from "react-router-dom";
 import CategoryComponent from "../components/CategoryComponent";
 import ProductContext from "../store/product-context";
@@ -51,6 +50,8 @@ function ProductsPage() {
                 title={product.name}
                 description={product.description}
                 image={product.imageUrl}
+                price={product.price}
+                quantity={product.quantity}
                 editButton={true}
                 deleteButton={true}
                 id={product.id}
