@@ -13,17 +13,6 @@ function modalReducer(state, action) {
   }
 }
 
-// function setCategoryReducer(state, action, products) {
-//   switch (action.type) {
-//     case "SET_CATEGORY":
-//       return action.category === "all"
-//         ? products
-//         : products.filter((product) => product.category === action.category);
-//     default:
-//       return state;
-//   }
-// }
-
 export default function ProductsContextProvider({ children }) {
   const [modalState, dispatch] = useReducer(modalReducer, false);
   const [category, setCategory] = useState("all");

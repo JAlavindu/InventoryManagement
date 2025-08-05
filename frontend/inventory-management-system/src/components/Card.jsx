@@ -4,6 +4,7 @@ import Button from "./Button";
 import DeleteProduct from "../pages/DeleteProduct";
 import Modal from "./Modal";
 import ProductContext from "../store/product-context";
+import { Link } from "react-router-dom";
 
 function Card({ title, description, image, ...props }) {
   const { modalState, openModal, closeModal } = useContext(ProductContext);
@@ -28,12 +29,13 @@ function Card({ title, description, image, ...props }) {
 
           <div className=" flex justify-end space-x-2">
             {props.editButton && (
-              <Button
-                label="Edit"
-                onClick={() => alert("Edit functionality not implemented yet")}
+              <Link
+                to={`/edit-product/${props.id}`}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold 
-          mt-2"
-              />
+          mt-2 px-4 py-2 rounded"
+              >
+                Edit
+              </Link>
             )}
             {props.deleteButton && (
               <Button
