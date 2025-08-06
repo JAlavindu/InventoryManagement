@@ -25,12 +25,16 @@ function Card({ title, description, image, ...props }) {
           <div>
             <h3 className="text-lg font-semibold mb-2">{title}</h3>
             <p className="text-gray-600">{description}</p>
-            <p className="text-gray-800 font-bold mt-2">
-              Price: ${props.price}
-            </p>
-            <p className="text-gray-800 font-bold mt-2">
-              Quantity: {props.quantity}
-            </p>
+            {props.price && (
+              <p className="text-gray-800 font-bold mt-2">
+                Price: ${props.price}
+              </p>
+            )}
+            {
+              <p className="text-gray-800 font-bold mt-2">
+                Quantity: {props.quantity}
+              </p>
+            }
           </div>
 
           <div className=" flex justify-end space-x-2">
