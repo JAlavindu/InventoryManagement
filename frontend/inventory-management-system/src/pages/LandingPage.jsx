@@ -1,7 +1,4 @@
-import React from "react";
-import NavBar from "../components/NavBar";
-import Card from "../components/Card";
-import Footer from "../components/Footer";
+import Card from "../components/common/Card";
 import infographic from "../assets/infographic.jpg";
 
 const ABOUT_US = [
@@ -30,7 +27,7 @@ const ABOUT_US = [
 function LandingPage() {
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen mx-auto w-4/5 ">
+      <div className="flex flex-col items-center justify-center min-h-screen mx-auto w-4/5 ">
         <div className="flex flex-row justify-center my-8 h-64 w-full">
           <div>
             <img

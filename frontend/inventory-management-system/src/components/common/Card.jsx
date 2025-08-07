@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from "react";
 import Button from "./Button";
-import DeleteProduct from "../pages/DeleteProduct";
+import DeleteProduct from "../../pages/admin/products/DeleteProduct";
 import Modal from "./Modal";
-import ProductContext from "../store/product-context";
+import ProductContext from "../../store/product-context";
 import { Link } from "react-router-dom";
 
 function Card({ title, description, image, ...props }) {

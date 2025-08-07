@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Button from "../components/Button";
-import useAxios from "../hooks/useAxios";
-import AddOrUpdateProductForm from "../components/addOrUpdateProductForm";
+import Button from "../../../components/common/Button";
+import useAxios from "../../../hooks/useAxios";
+import AddOrUpdateProductForm from "../../../components/admin/addOrUpdateProductForm";
 function AddProductsPage() {
   const [product, setProduct] = useState({
     name: "",

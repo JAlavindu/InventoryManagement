@@ -1,6 +1,6 @@
 import React from "react";
-import Input from "./Input";
-import categories from "../utils/categories";
+import Input from "../common/Input";
+import categories from "../../utils/categories";
 
 function AddOrUpdateProductForm({ handleChange, handleImageChange, product }) {
   return (

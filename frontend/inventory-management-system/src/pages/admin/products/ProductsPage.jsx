@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useCallback, useContext } from "react";
-import Card from "../components/Card";
+import Card from "../../../components/common/Card";
 import { Link } from "react-router-dom";
-import CategoryComponent from "../components/CategoryComponent";
-import ProductContext from "../store/product-context";
+import CategoryComponent from "../../../components/CategoryComponent";
+import ProductContext from "../../../store/product-context";
 
 function ProductsPage() {
   const { products, loading, error, refetchProducts } =

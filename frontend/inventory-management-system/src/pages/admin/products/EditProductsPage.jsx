@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import AddOrUpdateProductForm from "../components/addOrUpdateProductForm";
-import ProductContext from "../store/product-context";
+import AddOrUpdateProductForm from "../../../components/admin/addOrUpdateProductForm";
+import ProductContext from "../../../store/product-context";
 import { useNavigate, useParams } from "react-router-dom";
-import Button from "../components/Button";
-import useAxios from "../hooks/useAxios";
+import Button from "../../../components/common/Button";
+import useAxios from "../../../hooks/useAxios";
 
 function EditProductsPage() {
   const { products, refetchProducts } = useContext(ProductContext);

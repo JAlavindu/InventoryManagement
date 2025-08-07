@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
-import Button from "../components/Button";
-import ProductContext from "../store/product-context";
-import useAxios from "../hooks/useAxios";
+import Button from "../../../components/common/Button";
+import ProductContext from "../../../store/product-context";
+import useAxios from "../../../hooks/useAxios";
 
 function DeleteProduct({ id }) {
   const { modalState, openModal, closeModal } = useContext(ProductContext);
