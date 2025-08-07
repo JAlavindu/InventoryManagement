@@ -4,6 +4,7 @@ import ProductsPage from "../pages/admin/products/ProductsPage";
 import AddProductsPage from "../pages/admin/products/AddProductsPage";
 import Root from "../pages/Root";
 import EditProductsPage from "../pages/admin/products/EditProductsPage";
+import CustomerHomePage from "../pages/customer/CustomerHomePage";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,16 @@ const router = createBrowserRouter([
       { path: "products", element: <ProductsPage /> },
       { path: "add-product", element: <AddProductsPage /> },
       { path: "edit-product/:id", element: <EditProductsPage /> },
+    ],
+  },
+  {
+    path: "/customer",
+    element: <Root />,
+    children: [
+      {
+        path: "",
+        element: <CustomerHomePage />,
+      },
     ],
   },
 ]);

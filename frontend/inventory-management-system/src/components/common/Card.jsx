@@ -54,6 +54,12 @@ function Card({ title, description, image, ...props }) {
                 className="bg-red-500 hover:bg-red-700 text-white font-bold mt-2 ml-2"
               />
             )}
+            {props.addToCartButton && (
+              <Button
+                label="Add to Cart"
+                className="bg-green-500 hover:bg-green-700 text-white font-bold mt-2 ml-2"
+              />
+            )}
           </div>
         </div>
       </div>
