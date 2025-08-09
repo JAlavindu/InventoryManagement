@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "./Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -22,7 +22,14 @@ function NavBar() {
       </Link>
       <div className="flex space-x-4">
         {clickedSignup ? (
-          <h1>info</h1>
+          <>
+            <NavLink to="/products" className="text-white hover:text-gray-300">
+              Products
+            </NavLink>
+            <NavLink to="/cart" className="text-white hover:text-gray-300">
+              Cart
+            </NavLink>
+          </>
         ) : (
           <>
             <Button

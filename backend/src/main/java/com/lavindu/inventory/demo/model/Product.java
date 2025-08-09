@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Data
 @Entity
 public class Product {
 
@@ -21,7 +21,7 @@ public class Product {
     private Integer quantity;
     private String imageName;
     private String imageType;
-
+    @Lob
     private byte[] imageData;
 
     public Long getId() {
