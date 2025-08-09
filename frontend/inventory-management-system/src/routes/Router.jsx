@@ -5,6 +5,7 @@ import AddProductsPage from "../pages/admin/products/AddProductsPage";
 import Root from "../pages/Root";
 import EditProductsPage from "../pages/admin/products/EditProductsPage";
 import CustomerHomePage from "../pages/customer/CustomerHomePage";
+import SignUp from "../auth/SignUp";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     path: "/customer",
     element: <Root />,
     children: [
+      {
+        path: "register",
+        element: <SignUp />,
+      },
       {
         path: "",
         element: <CustomerHomePage />,

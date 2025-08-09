@@ -11,12 +11,17 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
+    public boolean existsByUsername(String username) {
+        return userRepo.existsByUsername(username);
+    }
+
     public User saveUser(User user) {
-        if(userRepo.existsByUsername(user.getUsername())) {
+        if(userRepo.existsByUsername(user.getUsername()) || userRepo.existsByEmail(user.getEmail())) {
             System.out.println("User already exists: " + user.getUsername());
             throw new IllegalArgumentException("User already exists: " + user.getUsername());
         }
         userRepo.save(user);
         return user;
     }
+
 }
