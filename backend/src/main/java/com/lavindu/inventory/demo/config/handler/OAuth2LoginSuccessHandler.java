@@ -1,4 +1,4 @@
-package com.lavindu.inventory.demo;
+package com.lavindu.inventory.demo.config.handler;
 
 import com.lavindu.inventory.demo.model.User;
 import com.lavindu.inventory.demo.model.enums.Role;
@@ -36,6 +36,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 (org.springframework.security.oauth2.core.user.OAuth2User) authentication.getPrincipal();
 
         String email = (String) oauth2User.getAttributes().get("email");
+        if (email == null) {
+            response.sendRedirect(frontendUrl + "/oauth2/error?reason=no-email");
+            return;
+        }
         // create local user if missing
         User u = userService.findByEmail(email).orElseGet(() -> {
             User newU = new User();
@@ -56,7 +60,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());
-        response.sendRedirect(frontendUrl + "/oauth2/success");
+        String redirectUrl = frontendUrl + "/customer";
+        response.sendRedirect(redirectUrl);
     }
 }
 
