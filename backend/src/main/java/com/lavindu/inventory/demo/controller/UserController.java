@@ -4,6 +4,7 @@ import com.lavindu.inventory.demo.model.User;
 import com.lavindu.inventory.demo.model.enums.Role;
 import com.lavindu.inventory.demo.service.JwtService;
 import com.lavindu.inventory.demo.service.UserService;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -41,6 +45,12 @@ public class UserController {
                     .body("Email already exists");
         }
 
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Password cannot be empty");
+        }
+
 
         // Force role to CUSTOMER — frontend cannot choose this
         user.setRole(Role.CUSTOMER);
@@ -48,8 +58,8 @@ public class UserController {
         // Hash password
         user.setPassword(encoder.encode(user.getPassword()));
 
-        user.setEmail(username); // Normalize email to lowercase
-        user.setUsername(email); // Normalize username to lowercase
+        user.setEmail(email); // Normalize email to lowercase
+        user.setUsername(username); // Normalize username to lowercase
 
         // Save user
         User savedUser = userService.saveUser(user);
@@ -58,13 +68,17 @@ public class UserController {
         // Don't send password back to client
         savedUser.setPassword(null);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+        response.put("user", Map.of("username", savedUser.getUsername(), "role", savedUser.getRole().name()));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     // optional: username/password login that returns token in cookie
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        var opt = userService.findByUsername(user.getUsername());
+        var opt = userService.findByUsername(user.getUsername().toLowerCase());
         if (opt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         User u = opt.get();
         if (u.getPassword() == null || !encoder.matches(user.getPassword(), u.getPassword())) {
@@ -72,8 +86,18 @@ public class UserController {
         }
         String token = jwtService.generateToken(u.getUsername(), u.getRole().name());
         ResponseCookie cookie = ResponseCookie.from("jwt", token)
-                .httpOnly(true).secure(false).path("/").maxAge(24*60*60).sameSite("Lax").build();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("Logged in");
+                .httpOnly(true)
+                .secure("prod".equals(System.getenv("SPRING_PROFILES_ACTIVE")))
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("Lax")
+                .build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Logged in");
+        response.put("user", Map.of("username", u.getUsername(), "role", u.getRole().name()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(response);
     }
 
     @PostMapping("/logout")
@@ -83,14 +107,22 @@ public class UserController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("Logged out");
     }
 
-//    // DTO for login
-//    public static class LoginRequest {
-//        public String username;
-//        public String password;
-//
-//        public String getUsername() {
-//            return username;
-//        }
-//        // getters/setters or use lombok
-//    }
+    @GetMapping("/me")
+    public ResponseEntity<?> me(@CookieValue(name = "jwt", required = false) String token) {
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = jwtService.extractUsername(token);
+        if (!jwtService.validateToken(token, username)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPassword(null);
+        return ResponseEntity.ok(user);
+    }
+
+
+
+
 }

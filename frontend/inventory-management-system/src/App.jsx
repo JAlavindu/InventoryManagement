@@ -1,13 +1,18 @@
 import React from "react";
-import { Router, RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router-dom"; // Remove unused Router import
 import router from "./routes/Router";
 import ProductsContextProvider from "./store/products-context-provider";
+import { AuthProvider } from "./store/auth-provider";
 
 function App() {
   return (
-    <ProductsContextProvider>
-      <RouterProvider router={router} />
-    </ProductsContextProvider>
+    <RouterProvider router={router}>
+      <AuthProvider>
+        <ProductsContextProvider>
+          {/* The routed components will be rendered here based on the router configuration */}
+        </ProductsContextProvider>
+      </AuthProvider>
+    </RouterProvider>
   );
 }
 

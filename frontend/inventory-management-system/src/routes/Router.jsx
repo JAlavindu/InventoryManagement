@@ -6,6 +6,8 @@ import Root from "../pages/Root";
 import EditProductsPage from "../pages/admin/products/EditProductsPage";
 import CustomerHomePage from "../pages/customer/CustomerHomePage";
 import SignUp from "../auth/SignUp";
+import Login from "../auth/Login";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -13,9 +15,24 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       { path: "", element: <LandingPage /> },
-      { path: "products", element: <ProductsPage /> },
-      { path: "add-product", element: <AddProductsPage /> },
-      { path: "edit-product/:id", element: <EditProductsPage /> },
+      {
+        path: "products",
+        element: (
+          <ProtectedRoute element={<ProductsPage />} requiredRole="ADMIN" />
+        ),
+      },
+      {
+        path: "add-product",
+        element: (
+          <ProtectedRoute element={<AddProductsPage />} requiredRole="ADMIN" />
+        ),
+      },
+      {
+        path: "edit-product/:id",
+        element: (
+          <ProtectedRoute element={<EditProductsPage />} requiredRole="ADMIN" />
+        ),
+      },
     ],
   },
   {
@@ -23,13 +40,22 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: "register",
-        element: <SignUp />,
-      },
-      {
         path: "",
-        element: <CustomerHomePage />,
+        element: (
+          <ProtectedRoute
+            element={<CustomerHomePage />}
+            requiredRole="CUSTOMER"
+          />
+        ),
       },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <Root />,
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "signup", element: <SignUp /> },
     ],
   },
 ]);
