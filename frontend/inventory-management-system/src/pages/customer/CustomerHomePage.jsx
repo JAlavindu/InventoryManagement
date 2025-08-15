@@ -6,14 +6,19 @@ import Card from "../../components/common/Card";
 function CustomerHomePage() {
   const { products, refetchProducts } = useContext(ProductContext);
   return (
-    <>
-      <div className="min-h-screen w-4/5 mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">
-          Welcome to Customer Home Page
-        </h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Welcome to your Dashboard
+            </h1>
+            <p className="text-gray-600 text-sm">Browse our latest products</p>
+          </div>
+        </div>
 
         {products && products.length > 0 ? (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <Card
                 key={product.id}
@@ -28,10 +33,12 @@ function CustomerHomePage() {
             ))}
           </ul>
         ) : (
-          <p>No products available.</p>
+          <div className="text-center text-gray-600 bg-white border border-gray-100 rounded-xl p-8">
+            No products available.
+          </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

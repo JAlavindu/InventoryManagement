@@ -86,26 +86,36 @@ function EditProductsPage() {
   }
 
   return (
-    <div className="p-6 w-4/5 mx-auto min-h-screen">
-      <h1 className="text-4xl font-bold mb-4">Edit Product</h1>
-      <div className="flex flex-col items-center bg-white rounded-lg shadow-lg p-6">
-        <img src={product.imageUrl} alt={product.name} />
-        {updateProduct ? (
-          <AddOrUpdateProductForm
-            handleChange={handleUpdateChange}
-            handleImageChange={handleUpdateImageChange}
-            product={updateProduct}
-          />
-        ) : (
-          <p className="text-gray-500">Loading form data...</p>
-        )}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-3xl mx-auto bg-white border border-gray-100 rounded-2xl shadow-xl p-6 sm:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+            Edit Product
+          </h1>
+          <div className="flex flex-col items-center gap-6">
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="w-full max-w-md rounded-xl border border-gray-100 shadow"
+            />
+            {updateProduct ? (
+              <AddOrUpdateProductForm
+                handleChange={handleUpdateChange}
+                handleImageChange={handleUpdateImageChange}
+                product={updateProduct}
+              />
+            ) : (
+              <p className="text-gray-500">Loading form data...</p>
+            )}
 
-        <Button
-          label="Update Product"
-          onClick={handleUpdateSubmit}
-          className="mt-4"
-        />
-        {message && <p className="text-green-500 mt-2">{message}</p>}
+            <Button
+              label="Update Product"
+              onClick={handleUpdateSubmit}
+              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow hover:shadow-blue-500/25 transition-all"
+            />
+            {message && <p className="text-green-600 mt-2">{message}</p>}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -61,31 +61,35 @@ function AddProductsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Add New Product
-        </h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-3xl mx-auto bg-white border border-gray-100 rounded-2xl shadow-xl p-6 sm:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
+            Add New Product
+          </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <AddOrUpdateProductForm
-            handleChange={handleChange}
-            handleImageChange={handleImageChange}
-            product={product}
-          />
-
-          <div className="flex justify-center">
-            <Button
-              label="Add Product"
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all"
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <AddOrUpdateProductForm
+              handleChange={handleChange}
+              handleImageChange={handleImageChange}
+              product={product}
             />
-          </div>
 
-          {message && (
-            <p className="text-green-600 font-medium text-center">{message}</p>
-          )}
-        </form>
+            <div className="flex justify-center">
+              <Button
+                label="Add Product"
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow hover:shadow-blue-500/25 transition-all"
+              />
+            </div>
+
+            {message && (
+              <p className="text-green-600 font-medium text-center">
+                {message}
+              </p>
+            )}
+          </form>
+        </div>
       </div>
     </div>
   );

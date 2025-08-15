@@ -10,23 +10,27 @@ function ProductsPage() {
     useContext(ProductContext);
 
   return (
-    <>
-      <div className="p-6 w-4/5 mx-auto min-h-screen">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-4xl font-bold mb-4 ">Products</h1>
-
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Products
+          </h1>
           <Link
             to="/add-product"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold mb-4 px-4 py-2 rounded"
+            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow hover:shadow-blue-500/25 transition-all"
           >
             Add Product
           </Link>
         </div>
 
-        <div className="mb-6">
+        {/* Filters */}
+        <div className="mb-6 bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
           <CategoryComponent />
         </div>
 
+        {/* States */}
         {loading && (
           <p className="text-gray-500 text-center animate-pulse">
             Loading products...
@@ -44,7 +48,7 @@ function ProductsPage() {
         )}
 
         {!loading && !error && products.length > 0 && (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <Card
                 key={product.id}
@@ -61,7 +65,7 @@ function ProductsPage() {
           </ul>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

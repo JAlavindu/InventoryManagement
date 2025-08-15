@@ -101,7 +101,7 @@ function Card({ title, description, image, ...props }) {
 
         {/* Content Section */}
         <div className="p-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-start justify-between">
+          <div className="flex flex-col lg:flex-col gap-4 items-start justify-between">
             {/* Text Content */}
             <div className="flex-1 min-w-0">
               <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
@@ -125,7 +125,7 @@ function Card({ title, description, image, ...props }) {
                   </div>
                 )}
                 {props.quantity && (
-                  <div className="flex items-center">
+                  <div className="flex items-center ">
                     <span className="text-sm font-medium text-gray-500 w-16">
                       Stock:
                     </span>
