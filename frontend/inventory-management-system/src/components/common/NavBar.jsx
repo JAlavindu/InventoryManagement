@@ -1,19 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import Button from "./Button";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import AuthContext from "../../store/auth-context";
 
 function NavBar() {
   const navigate = useNavigate();
-  const [clickedSignup, setClickedSignup] = useState(false);
-
-  const handleSignUp = () => {
-    setClickedSignup(true);
-    navigate("/products");
-  };
-
-  const handleLogin = () => {
-    navigate("/login");
-  };
+  const { isAuthenticated, user, handleLogout } = useContext(AuthContext);
 
   return (
     <div className="flex flex-row justify-between items-center bg-gray-800 text-white p-4">
@@ -21,24 +13,27 @@ function NavBar() {
         Inventory Management System
       </Link>
       <div className="flex space-x-4">
-        {clickedSignup ? (
+        {isAuthenticated ? (
           <>
-            <NavLink to="/products" className="text-white hover:text-gray-300">
-              Products
+            <span className="mr-2">Hi{user?.username ? `, ${user.username}` : ""}</span>
+            <NavLink to="/customer" className="text-white hover:text-gray-300">
+              Dashboard
             </NavLink>
-            <NavLink to="/cart" className="text-white hover:text-gray-300">
-              Cart
-            </NavLink>
+            <Button
+              onClick={handleLogout}
+              label="Logout"
+              className="bg-red-500 hover:bg-red-700 text-white font-bold"
+            />
           </>
         ) : (
           <>
             <Button
-              onClick={handleSignUp}
+              onClick={() => navigate("/auth/signup")}
               label="Sign Up"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold"
             />
             <Button
-              onClick={handleLogin}
+              onClick={() => navigate("/auth/login")}
               label="Login"
               className="bg-green-500 hover:bg-green-700 text-white font-bold"
             />

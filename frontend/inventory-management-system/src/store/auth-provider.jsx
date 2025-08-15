@@ -1,85 +1,130 @@
-import { useState, useEffect } from "react";
+// src/store/auth-provider.jsx
+import { useEffect, useReducer } from "react";
 import AuthContext from "./auth-context";
+import useAxios from "../hooks/useAxios";
 
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+function reducer(state, action) {
+  switch (action.type) {
+    case "LOGIN":
+      return { ...state, isAuthenticated: true, user: action.payload };
+    case "LOGOUT":
+      return { ...state, isAuthenticated: false, user: null };
+    default:
+      return state;
+  }
+}
+
+export default function AuthProvider({ children }) {
+  const [state, dispatch] = useReducer(reducer, {
+    isAuthenticated: false,
+    user: null,
+  });
+
+  // Check session (/me)
+  const {
+    data: sessionData,
+    loading: sessionLoading,
+    refetch: refetchSession,
+  } = useAxios({
+    url: "/api/users/me",
+    method: "GET",
+    withCredentials: true,
+    triggerOnMount: true,
+  });
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch("http://localhost:8080/api/users/me", {
-          credentials: "include",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (err) {
-        console.error("Session check failed", err);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
+    if (sessionData?.role) {
+      console.log("Session data updated:", sessionData);
+      dispatch({ type: "LOGIN", payload: sessionData });
+    } else if (sessionData === null && !sessionLoading) {
+      console.log("No session data, setting unauthenticated");
+      dispatch({ type: "LOGOUT" });
+    }
+  }, [sessionData, sessionLoading]);
+
+  // Login
+  const { refetch: loginRequest } = useAxios({
+    url: "/api/users/login",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+    triggerOnMount: false,
+  });
+
+  async function handleLogin(credentials) {
+    try {
+      console.log("Attempting login with credentials:", credentials);
+      const response = await loginRequest({
+        data: credentials, // { username, password }
+      });
+
+      console.log("Login response:", response);
+
+      // Handle response based on structure
+      if (response.data && response.data.user) {
+        const userData = response.data.user;
+        console.log("User data from login response:", userData);
+        dispatch({ type: "LOGIN", payload: userData });
+      } else if (!response.error) {
+        // If no user data but no error, assume JWT is set, refetch session
+        console.log("No user data in login response, refetching session...");
+        await refetchSession();
+      } else {
+        console.error("Login failed due to error in response:", response.error);
+        throw new Error("Invalid credentials or server error");
       }
-    };
-    checkAuth();
-  }, []);
-
-  const login = async (username, password) => {
-    const res = await fetch("http://localhost:8080/api/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ username, password }),
-    });
-    if (!res.ok) throw new Error("Invalid credentials");
-
-    const userRes = await fetch("http://localhost:8080/api/users/me", {
-      credentials: "include",
-    });
-    if (userRes.ok) {
-      const userData = await userRes.json();
-      setUser(userData);
-      setIsAuthenticated(true);
+    } catch (err) {
+      console.error("Login failed", err);
+      throw err; // Re-throw to be caught by the caller
     }
-  };
+  }
 
-  const signup = async (username, email, password) => {
-    const res = await fetch("http://localhost:8080/api/users/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
-    });
-    if (!res.ok) throw new Error(await res.text());
+  // Logout
+  const { refetch: logoutRequest } = useAxios({
+    url: "/api/users/logout",
+    method: "POST",
+    withCredentials: true,
+    triggerOnMount: false,
+  });
 
-    const userRes = await fetch("http://localhost:8080/api/users/me", {
-      credentials: "include",
-    });
-    if (userRes.ok) {
-      const userData = await userRes.json();
-      setUser(userData);
-      setIsAuthenticated(true);
+  async function handleLogout() {
+    try {
+      console.log("Attempting logout");
+      await logoutRequest();
+      dispatch({ type: "LOGOUT" });
+    } catch (err) {
+      console.error("Logout failed", err);
     }
-  };
+  }
 
-  const logout = async () => {
-    await fetch("http://localhost:8080/api/users/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-    setIsAuthenticated(false);
-    setUser(null);
-  };
+  // Signup (register) then auto-login
+  const { refetch: registerRequest } = useAxios({
+    url: "/api/users/register",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+    triggerOnMount: false,
+  });
+
+  async function handleSignup({ username, email, password }) {
+    // Backend lowercases username/email; send as provided
+    await registerRequest({ data: { username, email, password } });
+    // Auto-login to set JWT cookie, then session will populate
+    await handleLogin({ username, password });
+  }
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, loading, login, signup, logout }}
+      value={{
+        isAuthenticated: state.isAuthenticated,
+        user: state.user,
+        loading: sessionLoading,
+        handleLogin,
+        handleLogout,
+        signup: handleSignup,
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
-};
+}
