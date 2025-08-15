@@ -26,36 +26,70 @@ export default function SignUp() {
   };
 
   return (
-    <div className="w-4/5 min-h-screen mx-auto">
-      <form onSubmit={handleSubmit}>
-        <h2>Sign Up</h2>
+    <div className="min-h-[calc(100vh-64px-72px)] bg-gradient-to-br from-white to-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 flex items-center justify-center">
+        <div className="relative w-full max-w-md">
+          <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl opacity-10 blur-xl" />
+          <form
+            onSubmit={handleSubmit}
+            className="relative bg-white/90 backdrop-blur-sm border border-gray-100 shadow-2xl rounded-2xl p-8 space-y-6"
+          >
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                Create your account
+              </h2>
+              <p className="text-gray-600 text-sm">
+                Start managing your inventory in minutes
+              </p>
+            </div>
 
-        <Input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-          required
-        />
-        <Input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
+            <div className="space-y-4">
+              <Input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+                required
+              />
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                required
+              />
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+              />
+            </div>
 
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <Button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          type="submit"
-          label="Sign Up"
-        />
-      </form>
+            <div className="space-y-3 pt-2">
+              <Button
+                type="submit"
+                label="Sign Up"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow hover:shadow-blue-500/25 transition-all"
+              />
+              <p className="text-xs text-gray-500 text-center">
+                By signing up, you agree to our Terms and Privacy Policy.
+              </p>
+            </div>
+
+            <div className="text-center text-sm text-gray-600">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/auth/login")}
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Log in
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
