@@ -2,6 +2,7 @@
 import React, { useContext } from "react";
 import ProductContext from "../../store/product-context";
 import Card from "../../components/common/Card";
+import CategoryComponent from "../../components/CategoryComponent";
 
 function CustomerHomePage() {
   const { products, refetchProducts } = useContext(ProductContext);
@@ -15,6 +16,11 @@ function CustomerHomePage() {
             </h1>
             <p className="text-gray-600 text-sm">Browse our latest products</p>
           </div>
+        </div>
+
+        {/* Filters */}
+        <div className="mb-6 bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+          <CategoryComponent />
         </div>
 
         {products && products.length > 0 ? (
