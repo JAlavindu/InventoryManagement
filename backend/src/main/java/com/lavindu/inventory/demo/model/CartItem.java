@@ -1,29 +1,33 @@
 package com.lavindu.inventory.demo.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Data
 public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
+    @Setter
     @ManyToOne
     private Product product;
 
+    @Setter
     private int quantity;
 
     @ManyToOne
     private Cart cart;
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public Object getId() {
+        return id;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }

@@ -1,6 +1,7 @@
 package com.lavindu.inventory.demo.service;
 
 import com.lavindu.inventory.demo.model.Cart;
+import com.lavindu.inventory.demo.model.Product;
 import com.lavindu.inventory.demo.repo.CartRepo;
 import com.lavindu.inventory.demo.repo.CustomerRepo;
 import com.lavindu.inventory.demo.repo.ProductRepo;
@@ -22,9 +23,25 @@ public class CartService {
                 .orElse(new Cart());
     }
 
+
+
     public Cart addToCart(Long customerId, Long productId, int quantity) {
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
         Cart cart = getCartByCustomerId(customerId);
         cart.addItem(productRepo.findById(productId).orElse(null), quantity);
+        return cartRepo.save(cart);
+    }
+
+    public Cart removeFromCart(Long customerId, Long productId) {
+        Cart cart = getCartByCustomerId(customerId);
+        cart.getItems().removeIf(item -> item.getId().equals(productId));
+        return cartRepo.save(cart);
+    }
+
+    public Cart clearCart(Long customerId) {
+        Cart cart = getCartByCustomerId(customerId);
+        cart.getItems().clear();
         return cartRepo.save(cart);
     }
 
