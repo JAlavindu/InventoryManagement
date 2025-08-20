@@ -19,7 +19,6 @@ public class CartController {
     @GetMapping("/{customerId}")
     private ResponseEntity<Cart> getCart(@PathVariable Long customerId) {
         return new ResponseEntity<>(cartService.getCartByCustomerId(customerId), HttpStatus.OK);
-
     }
 
     @PostMapping("/{customerId}/add")
@@ -30,10 +29,18 @@ public class CartController {
         return ResponseEntity.ok(cartService.addToCart(customerId, productId, quantity));
     }
 
-//    @PostMapping("/{customerId}/add")
-//    private ResponseEntity<Cart> addTocart(@PathVariable Long customerId, @RequestParam Long productId, @RequestParam int quantity) {
-//        Customer customer =
-//        return new ResponseEntity<>( cartService.addToCart(customerId, productId, quantity), HttpStatus.OK);
-//    }
+    @PostMapping("/{customerId}/remove")
+    public ResponseEntity<Cart> removeFromCart(
+        @PathVariable Long customerId,
+        @RequestParam Long productId) {
+        return ResponseEntity.ok(cartService.removeFromCart(customerId, productId));
+    }
+
+    @DeleteMapping("/{customerId}/clear")
+    public ResponseEntity<Cart> clearCart(@PathVariable Long customerId) {
+        return ResponseEntity.ok(cartService.clearCart(customerId));
+    }
+
+
 
 }

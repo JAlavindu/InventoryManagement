@@ -10,8 +10,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class Cart {
 
     @Id
@@ -19,10 +17,31 @@ public class Cart {
     private Long id;
 
     @OneToOne
-    private Customer customr;
+    private Customer customer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Customer getCustomr() {
+        return customer;
+    }
+
+
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
+    }
 
     public void addItem(Product product, int quantity) {
         // Check if product already exists in cart
@@ -46,4 +65,7 @@ public class Cart {
         items.removeIf(item -> item.getProduct().getId().equals(productId));
     }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
