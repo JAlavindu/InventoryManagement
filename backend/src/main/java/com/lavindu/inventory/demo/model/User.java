@@ -1,5 +1,6 @@
 package com.lavindu.inventory.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lavindu.inventory.demo.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;

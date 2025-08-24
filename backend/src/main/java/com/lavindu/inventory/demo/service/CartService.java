@@ -22,8 +22,15 @@ public class CartService {
     private CustomerRepo customerRepo;
 
     public Cart getCartByCustomerId(Long customerId) {
-        return cartRepo.findByCustomer(customerRepo.findById(customerId).orElse(null))
-                .orElse(new Cart());
+        Customer customer = customerRepo.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        return cartRepo.findByCustomer(customer)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setCustomer(customer);
+                    return cartRepo.save(newCart);
+                });
     }
 
     public Cart addToCart(Long customerId, Long productId, int quantity) {
@@ -46,7 +53,7 @@ public class CartService {
 
     public Cart removeFromCart(Long customerId, Long productId) {
         Cart cart = getCartByCustomerId(customerId);
-        cart.getItems().removeIf(item -> item.getId().equals(productId));
+        cart.getItems().removeIf(item -> item.getProduct().getId().equals(productId));
         return cartRepo.save(cart);
     }
 
@@ -56,4 +63,7 @@ public class CartService {
         return cartRepo.save(cart);
     }
 
+    public Cart saveCart(Cart cart) {
+        return cartRepo.save(cart);
+    }
 }

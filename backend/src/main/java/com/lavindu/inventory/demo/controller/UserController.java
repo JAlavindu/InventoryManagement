@@ -1,7 +1,13 @@
 package com.lavindu.inventory.demo.controller;
 
+import com.lavindu.inventory.demo.dto.MeResponse;
+import com.lavindu.inventory.demo.dto.UserResponse;
+import com.lavindu.inventory.demo.model.Cart;
+import com.lavindu.inventory.demo.model.Customer;
 import com.lavindu.inventory.demo.model.User;
 import com.lavindu.inventory.demo.model.enums.Role;
+import com.lavindu.inventory.demo.service.CartService;
+import com.lavindu.inventory.demo.service.CustomerService;
 import com.lavindu.inventory.demo.service.JwtService;
 import com.lavindu.inventory.demo.service.UserService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -24,6 +30,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private CartService cartService;
 
     @Autowired
     private JwtService jwtService;
@@ -64,13 +76,32 @@ public class UserController {
         // Save user
         User savedUser = userService.saveUser(user);
 
+//        // Create customer linked to this user
+        Customer customer = new Customer();
+        customer.setUser(savedUser);
+        customer.setName(savedUser.getUsername());
+        customer.setEmail(savedUser.getEmail());
 
-        // Don't send password back to client
-        savedUser.setPassword(null);
+        Customer savedCustomer = customerService.saveCustomer(customer);
+
+ //Create empty cart
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        customer.setCart(cart);
+
+        Cart savedCart = cartService.saveCart(cart);
+
+        UserResponse userResponse = new UserResponse(
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                savedUser.getRole().name()
+        );
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "User registered successfully");
-        response.put("user", Map.of("username", savedUser.getUsername(), "role", savedUser.getRole().name()));
+        response.put("user", userResponse);
+        response.put("customer", Map.of("name", savedCustomer.getName(), "email", savedCustomer.getEmail()));
+        response.put("cart", Map.of("id", savedCart.getId()));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(response);
     }
@@ -110,17 +141,25 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<?> me(@CookieValue(name = "jwt", required = false) String token) {
-        if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        if (token == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
         String username = jwtService.extractUsername(token);
         if (!jwtService.validateToken(token, username)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setPassword(null);
-        return ResponseEntity.ok(user);
+
+        MeResponse response = new MeResponse(
+                user.getUsername(),
+                user.getEmail(),
+                user.getCustomer() != null ? user.getCustomer().getName() : null,
+                user.getRole().name()
+
+        );
+
+        return ResponseEntity.ok(response);
     }
 
 

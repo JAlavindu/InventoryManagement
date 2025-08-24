@@ -45,6 +45,10 @@ public class JwtService {
         return parseToken(token).getBody().getSubject();
     }
 
+    public String extractEmail(String token) {
+        return parseToken(token).getBody().getSubject();
+    }
+
     public String extractRole(String token) {
         Object r = parseToken(token).getBody().get("role");
         return r != null ? r.toString() : null;
