@@ -27,10 +27,10 @@ function NavBar() {
                   Hi{user?.username ? `, ${user.username}` : ""}
                 </span>
                 <NavLink
-                  to="/customer"
+                  to="/customer/cart"
                   className="text-gray-700 hover:text-blue-600 font-medium px-3 py-2 rounded-lg transition-colors"
                 >
-                  Dashboard
+                  Cart
                 </NavLink>
                 <Button
                   onClick={handleLogout}

@@ -8,6 +8,7 @@ import CustomerHomePage from "../pages/customer/CustomerHomePage";
 import SignUp from "../auth/SignUp";
 import Login from "../auth/Login";
 import ProtectedRoute from "../components/ProtectedRoute";
+import CartPage from "../pages/customer/CartPage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,12 @@ const router = createBrowserRouter([
             element={<CustomerHomePage />}
             requiredRole="CUSTOMER"
           />
+        ),
+      },
+      {
+        path: "cart",
+        element: (
+          <ProtectedRoute element={<CartPage />} requiredRole="CUSTOMER" />
         ),
       },
     ],
