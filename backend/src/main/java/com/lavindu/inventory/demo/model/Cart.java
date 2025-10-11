@@ -16,7 +16,11 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @OneToOne
+//    private Customer customer;
+
     @OneToOne
+    @JoinColumn(name = "customer_id", unique = true)  // ✅ Explicit unique constraint
     private Customer customer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -11,6 +11,8 @@ const ProtectedRoute = ({ element, requiredRole }) => {
     loading,
     "isAuthenticated:",
     isAuthenticated,
+    "user id:",
+    user?.userId,
     "user:",
     user,
     "requiredRole:",

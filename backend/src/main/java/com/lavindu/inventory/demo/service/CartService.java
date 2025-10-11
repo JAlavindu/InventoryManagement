@@ -22,7 +22,7 @@ public class CartService {
     private CustomerRepo customerRepo;
 
     public Cart getCartByCustomerId(Long customerId) {
-        Customer customer = customerRepo.findById(customerId)
+        Customer customer = customerRepo.findByUserId(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         return cartRepo.findByCustomer(customer)
@@ -33,18 +33,37 @@ public class CartService {
                 });
     }
 
+//    public Cart addToCart(Long customerId, Long productId, int quantity) {
+//        Customer customer = customerRepo.findByUserId(customerId)
+//                .orElseThrow(() -> new RuntimeException("Customer not found"));
+//
+//        Product product = productRepo.findById(productId)
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+//
+//        Cart cart = cartRepo.findByCustomerId(customerId)
+//                .orElseGet(() -> {
+//                    Cart newCart = new Cart();
+//                    newCart.setCustomer(customer);
+//                    return newCart;
+//                });
+//
+//        cart.addItem(product, quantity);
+//        return cartRepo.save(cart);
+//    }
+
     public Cart addToCart(Long customerId, Long productId, int quantity) {
-        Customer customer = customerRepo.findById(customerId)
+        Customer customer = customerRepo.findByUserId(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        Cart cart = cartRepo.findByCustomerId(customerId)
+        // Use findByCustomer instead of findByCustomerId for consistency
+        Cart cart = cartRepo.findByCustomer(customer)
                 .orElseGet(() -> {
                     Cart newCart = new Cart();
                     newCart.setCustomer(customer);
-                    return newCart;
+                    return cartRepo.save(newCart);  // ✅ Save immediately
                 });
 
         cart.addItem(product, quantity);

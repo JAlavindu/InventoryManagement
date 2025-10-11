@@ -17,14 +17,24 @@ export default function ProductsContextProvider({ children }) {
   const [modalState, dispatch] = useReducer(modalReducer, false);
   const [category, setCategory] = useState("all");
 
-  const transformProducts = useCallback(
-    (products) =>
-      products.map((product) => ({
-        ...product,
-        imageUrl: `http://localhost:8080/api/products/${product.id}/image`,
-      })),
-    []
-  );
+  const transformProducts = useCallback((response) => {
+    // Handle different response formats
+    const products = Array.isArray(response)
+      ? response
+      : response?.data || response?.products || [];
+
+    console.log("Fetched products:", products);
+
+    if (!Array.isArray(products)) {
+      console.error("Products is not an array:", products);
+      return [];
+    }
+
+    return products.map((product) => ({
+      ...product,
+      imageUrl: `/api/products/${product.id}/image`,
+    }));
+  }, []);
 
   const {
     data: products = [],
@@ -32,14 +42,30 @@ export default function ProductsContextProvider({ children }) {
     error,
     refetch,
   } = useAxios({
-    url: "http://localhost:8080/api/products",
+    url: "/api/products",
+    withCredentials: true,
     transform: transformProducts,
+  });
+
+  console.log("ProductsContextProvider state:", {
+    products,
+    loading,
+    error,
+    productsLength: products?.length,
   });
 
   // ✅ Dynamically filter products based on category
   const filteredProducts = useMemo(() => {
+    console.log("Filtering products:", {
+      category,
+      productsCount: products?.length,
+    });
     if (category.toLowerCase() === "all") return products;
-    return products.filter((product) => product.category === category);
+    const filtered = products.filter(
+      (product) => product.category === category
+    );
+    console.log("Filtered products:", { filteredCount: filtered.length });
+    return filtered;
   }, [products, category]);
 
   const openModal = () => dispatch({ type: "OPEN" });

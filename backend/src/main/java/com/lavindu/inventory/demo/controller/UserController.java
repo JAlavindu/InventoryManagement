@@ -126,7 +126,7 @@ public class UserController {
                 .build();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Logged in");
-        response.put("user", Map.of("username", u.getUsername(), "role", u.getRole().name()));
+        response.put("user", Map.of("userId", u.getId(), "username", u.getUsername(), "role", u.getRole().name()));
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(response);

@@ -69,16 +69,69 @@
 
 // export default Card;
 
-/* eslint-disable no-unused-vars */
 import React, { useContext, useState } from "react";
 import Button from "./Button";
 import DeleteProduct from "../../pages/admin/products/DeleteProduct";
 import Modal from "./Modal";
 import ProductContext from "../../store/product-context";
+import AuthContext from "../../store/auth-context";
+import useAxios from "../../hooks/useAxios";
 import { Link } from "react-router-dom";
 
 function Card({ title, description, image, ...props }) {
   const { modalState, openModal, closeModal } = useContext(ProductContext);
+  const { user } = useContext(AuthContext);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [cartMessage, setCartMessage] = useState("");
+
+  const { refetch: addToCartRequest } = useAxios({
+    url: user?.userId ? `/api/cart/${user.userId}/add` : null,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+    triggerOnMount: false,
+  });
+
+  async function addToCart() {
+    if (!user?.userId) {
+      setCartMessage("Please log in to add items to cart");
+      return;
+    }
+
+    setAddingToCart(true);
+    setCartMessage("");
+
+    try {
+      const payload = {
+        productId: props.id,
+        quantity: 1,
+      };
+
+      console.log("Adding to cart:", { userId: user.userId, payload });
+
+      await addToCartRequest({
+        data: payload,
+      });
+      setCartMessage("Added to cart successfully!");
+      setTimeout(() => setCartMessage(""), 3000);
+    } catch (err) {
+      console.error("Add to cart error:", err);
+      console.error("Error response:", err?.response);
+
+      const errorMsg = err?.response?.data;
+      const errorText =
+        typeof errorMsg === "string"
+          ? errorMsg
+          : errorMsg?.message ||
+            `Failed to add to cart: ${
+              err?.response?.status || "Unknown error"
+            }`;
+      setCartMessage(errorText);
+      setTimeout(() => setCartMessage(""), 3000);
+    } finally {
+      setAddingToCart(false);
+    }
+  }
 
   return (
     <>
@@ -205,28 +258,42 @@ function Card({ title, description, image, ...props }) {
               )}
 
               {props.addToCartButton && (
-                <Button
-                  label={
-                    <span className="inline-flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v5a2 2 0 11-4 0v-5m4 0V9a2 2 0 00-4 0v4.01"
-                        />
-                      </svg>
-                      Add to Cart
-                    </span>
-                  }
-                  className="inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={props.quantity === 0}
-                />
+                <>
+                  <Button
+                    label={
+                      <span className="inline-flex items-center">
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6.5-5v5a2 2 0 11-4 0v-5m4 0V9a2 2 0 00-4 0v4.01"
+                          />
+                        </svg>
+                        {addingToCart ? "Adding..." : "Add to Cart"}
+                      </span>
+                    }
+                    className="inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={props.quantity === 0 || addingToCart}
+                    onClick={addToCart}
+                  />
+                  {cartMessage && (
+                    <div
+                      className={`mt-2 text-xs px-3 py-1.5 rounded ${
+                        String(cartMessage).includes("success")
+                          ? "bg-green-50 text-green-700 border border-green-200"
+                          : "bg-red-50 text-red-700 border border-red-200"
+                      }`}
+                    >
+                      {cartMessage}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

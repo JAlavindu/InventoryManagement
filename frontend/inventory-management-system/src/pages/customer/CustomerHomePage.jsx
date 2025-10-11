@@ -5,7 +5,14 @@ import Card from "../../components/common/Card";
 import CategoryComponent from "../../components/CategoryComponent";
 
 function CustomerHomePage() {
-  const { products, refetchProducts } = useContext(ProductContext);
+  const { products, refetchProducts, loading, error } =
+    useContext(ProductContext);
+  console.log("CustomerHomePage render:", {
+    products,
+    productsLength: products?.length,
+    loading,
+    error,
+  });
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -23,7 +30,19 @@ function CustomerHomePage() {
           <CategoryComponent />
         </div>
 
-        {products && products.length > 0 ? (
+        {loading && (
+          <div className="text-center text-gray-600 bg-white border border-gray-100 rounded-xl p-8">
+            Loading products...
+          </div>
+        )}
+
+        {error && (
+          <div className="text-center text-red-600 bg-red-50 border border-red-200 rounded-xl p-8">
+            Error loading products: {error?.message || "Unknown error"}
+          </div>
+        )}
+
+        {!loading && !error && products && products.length > 0 ? (
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <Card
@@ -39,9 +58,12 @@ function CustomerHomePage() {
             ))}
           </ul>
         ) : (
-          <div className="text-center text-gray-600 bg-white border border-gray-100 rounded-xl p-8">
-            No products available.
-          </div>
+          !loading &&
+          !error && (
+            <div className="text-center text-gray-600 bg-white border border-gray-100 rounded-xl p-8">
+              No products available.
+            </div>
+          )
         )}
       </div>
     </div>
